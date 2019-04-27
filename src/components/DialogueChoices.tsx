@@ -1,27 +1,39 @@
-import { Choice } from "inkjs/engine/Choice";
-import React from "react";
+import React, { MouseEvent } from "react";
 import moize from "moize";
 import { RootState } from "@app/redux/reducer";
-import { dialogueChoices } from "@app/redux/selectors";
+import { currentBeat } from "@app/redux/selectors";
 import { Dispatch } from "redux";
 import { actionCreators } from "@app/redux/actions";
 import { connect } from "react-redux";
+import { Choice } from "@app/model/story";
 
 type ChoiceProps = Readonly<{
   text: string;
   choose: () => void;
+  disabled: boolean;
 }>;
 const ChoiceButton = (props: ChoiceProps) => {
-  return <button onClick={props.choose}>{props.text}</button>;
+  const choose = (event: MouseEvent<HTMLButtonElement>) => {
+    props.choose();
+    event.stopPropagation();
+  };
+  return (
+    <button onClick={choose} disabled={props.disabled}>
+      {props.text}
+    </button>
+  );
 };
 
-type DialogueChoicesStateProps = Readonly<{
+type DialogueChoicesOwnProps = Readonly<{
   choices: Choice[];
+}>;
+type DialogueChoicesStateProps = Readonly<{
+  isCurrent: boolean;
 }>;
 type DialogueChoicesDispatchProps = Readonly<{
   chooseChoice: (index: number) => void;
 }>;
-type DialogueChoicesProps = DialogueChoicesStateProps & DialogueChoicesDispatchProps;
+type DialogueChoicesProps = DialogueChoicesOwnProps & DialogueChoicesStateProps & DialogueChoicesDispatchProps;
 
 const buildChoiceCallback = moize((index: number, chooseChoice: (index: number) => void) => () => chooseChoice(index));
 
@@ -35,6 +47,7 @@ const _DialogueChoices = (props: DialogueChoicesProps) => {
         <ChoiceButton
           key={choice.index}
           text={choice.text}
+          disabled={!props.isCurrent}
           choose={buildChoiceCallback(choice.index, props.chooseChoice)}
         />
       ))}
@@ -42,9 +55,10 @@ const _DialogueChoices = (props: DialogueChoicesProps) => {
   );
 };
 
-function mapStateToProps(state: RootState): DialogueChoicesStateProps {
+function mapStateToProps(state: RootState, ownProps: DialogueChoicesOwnProps): DialogueChoicesStateProps {
+  const current = currentBeat(state);
   return {
-    choices: dialogueChoices(state),
+    isCurrent: current !== undefined && current.beatType === "choices" && current.choices === ownProps.choices,
   };
 }
 

@@ -29,6 +29,10 @@ const createConfig = (env, argv) => ({
         include: APP_PATH,
       },
       {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+      {
         test: /\.(png|svg|ttf|jpg|mp4)$/,
         loader: "file-loader",
         options: {

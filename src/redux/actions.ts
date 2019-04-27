@@ -1,6 +1,5 @@
 import { createAction, InferActionFromCreator } from "./action-creators";
-import { StoryBeat } from "./reducer";
-import { Choice } from "inkjs/engine/Choice";
+import { StoryBeat, Choice } from "@app/model/story";
 
 export enum Actions {
   INCREMENT_COUNTER = "INCREMENT_COUNTER",
@@ -8,18 +7,22 @@ export enum Actions {
 
   ADD_STORY_BEAT = "ADD_STORY_BEAT",
   PROCEED_IN_STORY = "PROCEED_IN_STORY",
-  SET_CHOICES = "SET_CHOICES",
   CHOOSE = "CHOOSE",
+
+  START_TYPING = "START_TYPING",
+  STOP_TYPING = "STOP_TYPING",
 }
 
 export const actionCreators = {
-  incrementCounter: createAction(Actions.INCREMENT_COUNTER, () => ({ type: Actions.INCREMENT_COUNTER })),
-  decrementCounter: createAction(Actions.DECREMENT_COUNTER, () => ({ type: Actions.DECREMENT_COUNTER })),
+  incrementCounter: createAction(Actions.INCREMENT_COUNTER),
+  decrementCounter: createAction(Actions.DECREMENT_COUNTER),
 
-  proceedInStory: createAction(Actions.PROCEED_IN_STORY, () => ({ type: Actions.PROCEED_IN_STORY })),
+  proceedInStory: createAction(Actions.PROCEED_IN_STORY),
   addStoryBeat: createAction(Actions.ADD_STORY_BEAT, (beat: StoryBeat) => ({ type: Actions.ADD_STORY_BEAT, beat })),
-  setChoices: createAction(Actions.SET_CHOICES, (choices: Choice[]) => ({ type: Actions.SET_CHOICES, choices })),
   choose: createAction(Actions.CHOOSE, (index: number) => ({ type: Actions.CHOOSE, index })),
+
+  startTyping: createAction(Actions.START_TYPING),
+  stopTyping: createAction(Actions.STOP_TYPING),
 };
 
 type ActionMap = typeof actionCreators;

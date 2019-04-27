@@ -1,10 +1,12 @@
-import { RootState, StoryBeat } from "@app/redux/reducer";
+import { RootState } from "@app/redux/reducer";
 import { connect } from "react-redux";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Dispatch } from "redux";
 import { actionCreators } from "@app/redux/actions";
 import { dialogueLog, shouldBeAdvancable } from "@app/redux/selectors";
 import { DialogueChoices } from "./DialogueChoices";
+import { StoryBeat } from "@app/model/story";
+import { DialogueMessage } from "./DialogueMessage";
 
 type DialogueStateProps = Readonly<{
   log: StoryBeat[];
@@ -16,14 +18,27 @@ type DialogueDispatchProps = Readonly<{
 type DialogueProps = DialogueStateProps & DialogueDispatchProps;
 
 const _Dialogue = (props: DialogueProps) => {
+  const container = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (container.current) {
+      container.current.scrollTop = container.current.scrollHeight;
+    }
+  }, [props.log]);
   return (
-    <>
-      {props.log.map((message) => (
-        <p key={message.message}>{message.message}</p>
-      ))}
-      <DialogueChoices />
-      {props.shouldBeAdvancable && <button onClick={props.continueStory}>Continue story</button>}
-    </>
+    <div className="dialogueContainer" ref={container} onClick={props.continueStory} role="button">
+      {props.log.map((beat, index) => {
+        switch (beat.beatType) {
+          case "message": {
+            return (
+              <DialogueMessage message={beat} showCursor={props.shouldBeAdvancable && index === props.log.length - 1} />
+            );
+          }
+          case "choices": {
+            return <DialogueChoices choices={beat.choices} />;
+          }
+        }
+      })}
+    </div>
   );
 };
 
