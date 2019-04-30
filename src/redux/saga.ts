@@ -45,6 +45,7 @@ function* advanceStory() {
       const { message, speaker, isNarration } = getSpeaker(next);
       yield put(actionCreators.addStoryBeat({ beatType: "message", message, speaker, isNarration }));
     }
+    yield fork(debounce);
   } else {
     const advancable = yield select(shouldBeAdvancable);
     if (advancable && story.currentChoices.length > 0) {
@@ -58,8 +59,8 @@ function* advanceStory() {
         })
       );
     }
+    yield fork(debounce);
   }
-  yield fork(debounce);
   const stateUnreadCount = yield select(unreadCount);
   const storyUnreadList = story.variablesState.GetVariableWithName("unread_messages") as ListValue;
   const storyUnreadCount = storyUnreadList.value!.Count;

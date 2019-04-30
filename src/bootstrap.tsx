@@ -12,6 +12,13 @@ export function bootstrap() {
   ReactDOM.render(<HmrContainer />, container);
 
   store.dispatch(actionCreators.proceedInStory());
+
+  document.body.addEventListener("keypress", (event) => {
+    if (document.activeElement && document.activeElement.nodeName === "BUTTON") {
+      return;
+    }
+    store.dispatch(actionCreators.proceedInStory());
+  });
 }
 
 // @ts-ignore
