@@ -4,7 +4,8 @@
   "description": "ludum dare 44",
   "main": "dist/bundle.js",
   "scripts": {
-    "dev": "webpack-dev-server --port=3000 --config=webpack-config/dev.js --progress --colors --mode=development"
+    "dev": "webpack-dev-server --port=3000 --config=webpack-config/dev.js --progress --colors --mode=development",
+    "build": "webpack --config=webpack-config/prod.js"
   },
   "repository": {
     "type": "git",
@@ -50,7 +51,6 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.2",
-    "react-typing-animation": "^1.6.2",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
     "tslint": "^5.16.0",

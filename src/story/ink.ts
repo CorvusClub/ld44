@@ -4,3 +4,5 @@ import { Story } from "inkjs/engine/Story";
 const storyContent = require("@app/ink/main.ink").default;
 
 export const story = new Story(storyContent);
+// @ts-ignore
+window.DEBUG_STORY = story;

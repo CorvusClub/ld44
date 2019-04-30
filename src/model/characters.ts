@@ -1,2 +1,2 @@
-export type Character = "mage" | "robot" | "gun" | "knight";
+export type Character = "player" | "cop" | "officer" | "gal";
 export type Speaker = Character | "narrator";

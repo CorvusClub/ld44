@@ -1,10 +1,6 @@
 import { RootState } from "./reducer";
 import { StoryBeat } from "@app/model/story";
 
-export function counterValue(state: RootState) {
-  return state.counter;
-}
-
 export function dialogueLog(state: RootState) {
   return state.story.log;
 }
@@ -21,4 +17,13 @@ export function shouldBeAdvancable(state: RootState) {
 }
 export function isTyping(state: RootState) {
   return state.typing;
+}
+export function unreadCount(state: RootState) {
+  return state.story.unreadCount;
+}
+export function currentLocation(state: RootState) {
+  return state.story.currentLocation;
+}
+export function knownLocations(state: RootState) {
+  return state.story.knownLocations;
 }

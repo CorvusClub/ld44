@@ -4,6 +4,7 @@ export type Message = {
   beatType: "message";
   message: string;
   speaker: Speaker;
+  isNarration: boolean;
 };
 export type Choices = {
   beatType: "choices";

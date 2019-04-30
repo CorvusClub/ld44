@@ -1,11 +1,12 @@
 import React, { MouseEvent } from "react";
 import moize from "moize";
 import { RootState } from "@app/redux/reducer";
-import { currentBeat } from "@app/redux/selectors";
+import { currentBeat, dialogueLog } from "@app/redux/selectors";
 import { Dispatch } from "redux";
 import { actionCreators } from "@app/redux/actions";
 import { connect } from "react-redux";
-import { Choice } from "@app/model/story";
+import { Choice, Message, Choices } from "@app/model/story";
+import { portraits } from "@app/assets/portaits";
 
 type ChoiceProps = Readonly<{
   text: string;
@@ -25,10 +26,11 @@ const ChoiceButton = (props: ChoiceProps) => {
 };
 
 type DialogueChoicesOwnProps = Readonly<{
-  choices: Choice[];
+  choices: Choices;
 }>;
 type DialogueChoicesStateProps = Readonly<{
   isCurrent: boolean;
+  previousMessage: Message;
 }>;
 type DialogueChoicesDispatchProps = Readonly<{
   chooseChoice: (index: number) => void;
@@ -38,27 +40,39 @@ type DialogueChoicesProps = DialogueChoicesOwnProps & DialogueChoicesStateProps 
 const buildChoiceCallback = moize((index: number, chooseChoice: (index: number) => void) => () => chooseChoice(index));
 
 const _DialogueChoices = (props: DialogueChoicesProps) => {
-  if (props.choices.length === 0) {
+  if (props.choices.choices.length === 0) {
     return null;
   }
   return (
-    <ul>
-      {props.choices.map((choice) => (
-        <ChoiceButton
-          key={choice.index}
-          text={choice.text}
-          disabled={!props.isCurrent}
-          choose={buildChoiceCallback(choice.index, props.chooseChoice)}
-        />
-      ))}
-    </ul>
+    <div className={`message ${props.previousMessage.speaker} ${props.previousMessage.isNarration && "narrator"}`}>
+      <div className="portraitContainer">
+        <img src={portraits[props.previousMessage.speaker]} alt={props.previousMessage.speaker} className="portrait" />
+      </div>
+      <div className="dialog">
+        <span>{props.previousMessage.message}</span>
+        <ul className="choices">
+          {props.choices.choices.map((choice) => (
+            <ChoiceButton
+              key={choice.index}
+              text={choice.text}
+              disabled={!props.isCurrent}
+              choose={buildChoiceCallback(choice.index, props.chooseChoice)}
+            />
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 
 function mapStateToProps(state: RootState, ownProps: DialogueChoicesOwnProps): DialogueChoicesStateProps {
   const current = currentBeat(state);
+  const log = dialogueLog(state);
+  const myPos = log.indexOf(ownProps.choices);
+  const prevPos = myPos - 1;
   return {
-    isCurrent: current !== undefined && current.beatType === "choices" && current.choices === ownProps.choices,
+    isCurrent: current !== undefined && current.beatType === "choices" && current === ownProps.choices,
+    previousMessage: log[prevPos] as Message,
   };
 }
 

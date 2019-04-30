@@ -1,30 +1,19 @@
 import { combineReducers } from "redux";
 import { RootAction, Actions } from "./actions";
-import { StoryBeat, Choice } from "@app/model/story";
-
-type CounterState = Readonly<number>;
-
-const initialCounterState = 0;
-
-function counter(state: CounterState = initialCounterState, action: RootAction) {
-  switch (action.type) {
-    case Actions.INCREMENT_COUNTER: {
-      return state + 1;
-    }
-    case Actions.DECREMENT_COUNTER: {
-      return state - 1;
-    }
-  }
-
-  return state;
-}
+import { StoryBeat } from "@app/model/story";
 
 type StoryState = {
   log: StoryBeat[];
+  unreadCount: number;
+  currentLocation: string;
+  knownLocations: string[];
 };
 
 const initialStoryState: StoryState = {
   log: [],
+  unreadCount: 0,
+  currentLocation: "intro",
+  knownLocations: [],
 };
 function story(state: StoryState = initialStoryState, action: RootAction) {
   switch (action.type) {
@@ -32,6 +21,24 @@ function story(state: StoryState = initialStoryState, action: RootAction) {
       return {
         ...state,
         log: [...state.log, action.beat],
+      };
+    }
+    case Actions.SET_UNREAD_COUNT: {
+      return {
+        ...state,
+        unreadCount: action.count,
+      };
+    }
+    case Actions.SET_CURRENT_LOCATION: {
+      return {
+        ...state,
+        currentLocation: action.currentLocation,
+      };
+    }
+    case Actions.SET_KNOWN_LOCATIONS: {
+      return {
+        ...state,
+        knownLocations: action.locations,
       };
     }
   }
@@ -53,7 +60,6 @@ function typing(state: TypingState = initialTypingState, action: RootAction) {
   return state;
 }
 export const reducer = combineReducers({
-  counter,
   story,
   typing,
 });

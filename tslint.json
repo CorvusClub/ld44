@@ -40,6 +40,7 @@
     "no-angle-bracket-type-assertion": false,
     "no-any": false,
     "no-consecutive-blank-lines": [true],
+    "no-non-null-assertion": false,
     "no-console": false,
     "no-empty": false,
     "no-floating-promises": false,

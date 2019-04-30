@@ -13,3 +13,14 @@ export function bootstrap() {
 
   store.dispatch(actionCreators.proceedInStory());
 }
+
+// @ts-ignore
+if (module.hot) {
+  (module as any).hot.addStatusHandler((status: string) => {
+    if (status === "idle") {
+      if (store.getState().story.log.length === 0) {
+        store.dispatch(actionCreators.proceedInStory());
+      }
+    }
+  });
+}
