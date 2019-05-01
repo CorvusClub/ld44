@@ -59,6 +59,7 @@ function* advanceStory() {
         })
       );
     }
+    (document.activeElement && (document.activeElement as any)).blur();
     yield fork(debounce);
   }
   const stateUnreadCount = yield select(unreadCount);

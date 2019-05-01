@@ -24,7 +24,7 @@ You head back to your car. What would you like to do?
 + { locations ? locregular } [VISIT THE REGULAR]
   -> regular
 
-+ { locations ? locbfhouse } [VISIT THE BOYFRIEND'S HOUSE]
+* { locations ? locbfhouse } [VISIT THE BOYFRIEND'S HOUSE]
   -> bfhouse
 
 * { locations ? locrichass } [VISIT THE MCMAHON MANSION]
